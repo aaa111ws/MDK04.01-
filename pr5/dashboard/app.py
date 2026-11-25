@@ -8,7 +8,11 @@ API_URL = os.getenv("API_URL", "http://localhost:8000")
 USER = os.getenv("DASH_USER", "admin")
 PASSWORD = os.getenv("DASH_PASSWORD", "admin")
 
-st.set_page_config(page_title="Библиотека — аналитика", page_icon="📚", layout="wide")
+PALETTE = ["#1f4d3f", "#c9a75d", "#8a5a1f", "#5f7f73", "#3b3d37", "#b8ad94"]
+px.defaults.template = "simple_white"
+px.defaults.color_discrete_sequence = PALETTE
+
+st.set_page_config(page_title="Библиотека — аналитика", layout="wide")
 st.title("Библиотека — панель заведующего")
 
 
@@ -67,8 +71,8 @@ stock = pd.DataFrame(api_get("stock"))
 if not stock.empty:
     st.plotly_chart(
         px.pie(stock, values="count", names="status",
-               color_discrete_map={"available": "green", "reserved": "orange",
-                                   "issued": "royalblue", "written_off": "gray"}),
+               color_discrete_map={"available": "#1f4d3f", "reserved": "#c9a75d",
+                                   "issued": "#8a5a1f", "written_off": "#b8ad94"}),
         use_container_width=True)
 
 

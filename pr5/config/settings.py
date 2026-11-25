@@ -47,7 +47,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -73,6 +73,14 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
+
+if os.getenv("DB_ENGINE") == "sqlite":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 AUTH_USER_MODEL = "accounts.User"
@@ -120,6 +128,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"

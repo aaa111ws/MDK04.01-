@@ -4,6 +4,15 @@ from tkinter import messagebox
 
 MAX_ATTEMPTS = 3
 
+PAPER = "#f6f2e9"
+FIELD = "#fffdf8"
+INK = "#1c1e1b"
+MUTED = "#6d675b"
+BRASS = "#c9a75d"
+GREEN = "#1f4d3f"
+GREEN_DARK = "#163a2f"
+LINE = "#d6cdb8"
+
 
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
@@ -22,35 +31,57 @@ class LoginWindow:
         self.show_password = tk.BooleanVar(value=False)
 
         root.title("Библиотека — вход")
-        root.geometry("380x340")
+        root.geometry("400x420")
         root.resizable(False, False)
+        root.configure(bg=PAPER)
 
-        tk.Label(root, text="Библиотека", font=("Arial", 18, "bold")).pack(pady=(18, 0))
-        tk.Label(root, text="Система учёта книг", fg="#555").pack(pady=(0, 12))
+        tk.Frame(root, bg=INK, height=6).pack(fill="x")
+        tk.Frame(root, bg=BRASS, height=2).pack(fill="x")
 
-        tk.Label(root, text="Логин:").pack(anchor="w", padx=45)
-        self.entry_login = tk.Entry(root, width=32)
-        self.entry_login.pack(padx=45, pady=4)
+        head = tk.Frame(root, bg=PAPER)
+        head.pack(pady=(26, 18))
+        tk.Label(head, text="Б", font=("Georgia", 16, "bold"), fg=BRASS, bg=PAPER,
+                 width=2, highlightthickness=1, highlightbackground=BRASS).pack(side="left", padx=(0, 12))
+        titles = tk.Frame(head, bg=PAPER)
+        titles.pack(side="left")
+        tk.Label(titles, text="Библиотека", font=("Georgia", 20), fg=INK, bg=PAPER).pack(anchor="w")
+        tk.Label(titles, text="система учёта книг", font=("Segoe UI", 9), fg=MUTED, bg=PAPER).pack(anchor="w")
+
+        form = tk.Frame(root, bg=PAPER)
+        form.pack(fill="x", padx=48)
+
+        tk.Label(form, text="ЛОГИН", font=("Segoe UI", 8, "bold"), fg=MUTED, bg=PAPER).pack(anchor="w")
+        self.entry_login = self.make_entry(form)
         self.entry_login.focus()
 
-        tk.Label(root, text="Пароль:").pack(anchor="w", padx=45)
-        self.entry_password = tk.Entry(root, width=32, show="*")
-        self.entry_password.pack(padx=45, pady=4)
+        tk.Label(form, text="ПАРОЛЬ", font=("Segoe UI", 8, "bold"), fg=MUTED, bg=PAPER).pack(anchor="w", pady=(12, 0))
+        self.entry_password = self.make_entry(form, show="*")
 
         tk.Checkbutton(
-            root, text="Показать пароль",
-            variable=self.show_password, command=self.toggle_password,
-        ).pack(anchor="w", padx=45)
-
-        self.status = tk.Label(root, text=f"Попыток: {self.attempts_left}", fg="#555")
-        self.status.pack(pady=(10, 0))
+            form, text="Показать пароль", variable=self.show_password, command=self.toggle_password,
+            bg=PAPER, fg=INK, activebackground=PAPER, selectcolor=FIELD, font=("Segoe UI", 9),
+            highlightthickness=0, bd=0,
+        ).pack(anchor="w", pady=(8, 0))
 
         tk.Button(
-            root, text="Войти", width=16, command=self.check_login,
-            bg="#2F5D8A", fg="white", activebackground="#244A6E", cursor="hand2",
-        ).pack(pady=14)
+            form, text="Войти", command=self.check_login, font=("Segoe UI", 10, "bold"),
+            bg=GREEN, fg=PAPER, activebackground=GREEN_DARK, activeforeground=PAPER,
+            relief="flat", bd=0, cursor="hand2", pady=8,
+        ).pack(fill="x", pady=(18, 0))
+
+        self.status = tk.Label(root, text=f"Осталось попыток: {self.attempts_left}",
+                               font=("Segoe UI", 9), fg=MUTED, bg=PAPER)
+        self.status.pack(pady=(14, 0))
 
         root.bind("<Return>", self.check_login)
+
+    def make_entry(self, parent, show=""):
+        entry = tk.Entry(
+            parent, show=show, font=("Segoe UI", 11), bg=FIELD, fg=INK, relief="flat",
+            insertbackground=INK, highlightthickness=1, highlightbackground=LINE, highlightcolor=GREEN,
+        )
+        entry.pack(fill="x", ipady=6, pady=(4, 0))
+        return entry
 
     def toggle_password(self):
         self.entry_password.config(show="" if self.show_password.get() else "*")
@@ -75,7 +106,7 @@ class LoginWindow:
             return
 
         messagebox.showerror("Ошибка", "Неверный логин или пароль.")
-        self.status.config(text=f"Попыток: {self.attempts_left}")
+        self.status.config(text=f"Осталось попыток: {self.attempts_left}", fg="#9b2c22")
         self.entry_password.delete(0, tk.END)
         self.entry_password.focus()
 

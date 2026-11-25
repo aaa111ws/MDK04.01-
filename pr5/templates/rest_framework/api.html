@@ -1,0 +1,8 @@
+{% extends "rest_framework/base.html" %}
+{% load static %}
+
+{% block title %}{% if name %}{{ name }} — {% endif %}API «Библиотека»{% endblock %}
+
+{% block style %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/library-api.css' %}">{% endblock %}
+
+{% block branding %}<a class="navbar-brand" rel="nofollow" href="/api/"><span class="mark">Б</span>Библиотека · API</a>{% endblock %}
